@@ -21,11 +21,13 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable()) // 실무 API 서버는 보통 CSRF를 비활성화함 (Postman 테스트를 위해 필수)
-            .headers(headers -> headers.frameOptions(frame -> frame.disable())) // H2 콘솔(iframe) 접속을 위해 필요
+            // (24, 27) 람다 -> 메서드 참조로 변경
+            .csrf(org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer::disable)
+            // (25, 63) 람다 -> 메서드 참조로 변경
+            .headers(headers -> headers.frameOptions(org.springframework.security.config.annotation.web.configurers.HeadersConfigurer.FrameOptionsConfig::disable))
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/api/users/**", "/h2-console/**").permitAll() // 회원가입, DB콘솔은 누구나 통과!
-                .anyRequest().authenticated() // 그 외 나머지 모든 요청은 로그인이 필요함
+                .requestMatchers("/api/users/**", "/h2-console/**").permitAll()
+                .anyRequest().authenticated()
             );
 
         return http.build();
