@@ -17,7 +17,7 @@ public class UserService {
 
     private final UserRepository userRepository; // (3) 서비스는 금고 관리자(Repository)가 필요해요.
     // BCrypt 암호화 도구 생성
-    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+    private final BCryptPasswordEncoder passwordEncoder; // 이제 스프링이 준 걸 사용해요!
 
     /**
      * 회원 가입 (저장)
